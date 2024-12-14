@@ -7,6 +7,11 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
-      - uses: actions/checkout@v4
-      - run: echo okay
+      # https://docs.github.com/en/actions/use-cases-and-examples/project-management/scheduling-issue-creation
+      - run: gh issue create --title "Test Issue created by periodic Workflow" --body "This was created on $(date)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
