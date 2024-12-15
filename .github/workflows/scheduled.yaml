@@ -1,7 +1,7 @@
 name: Test a scheduled job
 on:
-  schedule:
-    - cron: '*/5 * * * *'  # run every 5min
+  #schedule:
+  #  - cron: '*/5 * * * *'  # run every 5min
   push:
 jobs:
   test:
