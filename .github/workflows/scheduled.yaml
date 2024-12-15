@@ -16,13 +16,8 @@ jobs:
         run: |
           set -uex
           if ! cargo run > error.log 2>&1; then
-            echo "compiler-output=$(base64 -w0 error.log)" >> $GITHUB_OUTPUT
-            false
+            printf 'Hello, I have detected, that this repository does not work with the current beta compiler.\n\nIt looks like, there were changes introduced, that broke this repository. The error was:\n```console\n%s\n```\nPlease take actions to fix this before the behavior reaches stable.' "$(< error.log)" | gh issue create --title 'The compilation fails with current beta compiler' --body-file -
           fi
-      # https://docs.github.com/en/actions/use-cases-and-examples/project-management/scheduling-issue-creation
-      - name: Create an issue, since the beta-build is broken
-        run: printf 'Hello, I have detected, that this repository does not work with the current beta compiler.\n\nIt looks like, there were changes introduced, that broke this repository. Please take actions to fix this before the behavior reaches stable. The error was:\n```console\n%s\n```' "$(echo "${{steps.build-beta.outputs.compiler-output}}" | base64 -d)" | gh issue create --title 'The compilation fails with current beta compiler' --body-file -
-        if: ${{ failure() }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
