@@ -16,6 +16,10 @@ fn main() {
             .as_bytes();
         let version = String::from_utf8_lossy(&version);
         println!("cargo::rustc-env=RUST_COMPILER_VERSION={version}");
+
+        if version.contains("beta") {
+            panic!("This is a deliberate error to test, if CI catches it...");
+        }
     } else {
         panic!("Could not extract the version info from the `cargo --version` output");
     }
