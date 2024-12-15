@@ -12,10 +12,13 @@ jobs:
       issues: write
     steps:
       - run: |
+          set -uex
           echo 'some script, that runs for some time'
           sleep 30
-          echo 'now the script fails'
-          false
+          if [ "$(( "$(date +%M)" & 1 ))" -eq 0 ]; then
+            echo 'now the script fails'
+            false
+          fi
       # https://docs.github.com/en/actions/use-cases-and-examples/project-management/scheduling-issue-creation
       - run: gh issue create --title "Test Issue created by periodic Workflow" --body "This was created on $(date)"
         if: ${{ failure() }}
