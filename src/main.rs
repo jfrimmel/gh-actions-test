@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    println!("Hello, I'm built with {}!", env!("RUST_COMPILER_VERSION"));
 }

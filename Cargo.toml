@@ -5,3 +5,6 @@ edition = "2021"
 publish = false
 
 [dependencies]
+
+[build-dependencies]
+regex = "1"
