@@ -11,16 +11,18 @@ jobs:
     permissions:
       issues: write
     steps:
-      - run: |
+      - id: build-beta
+        run: |
           set -uex
           echo 'some script, that runs for some time'
           sleep 30
           if [ "$(( "$(date +%M)" & 1 ))" -eq 0 ]; then
-            echo 'now the script fails'
+            echo 'Oh no, the build failed!' > error.log
+            echo "compiler-output=$(cat error.log)" >> $GITHUB_OUTPUT
             false
           fi
       # https://docs.github.com/en/actions/use-cases-and-examples/project-management/scheduling-issue-creation
-      - run: gh issue create --title "Test Issue created by periodic Workflow" --body "This was created on $(date)"
+      - run: gh issue create --title "Test Issue created by periodic Workflow" --body "This was created on $(date) due to the following error:\n${{steps.build-beta.outputs.compiler-output}}"
         if: ${{ failure() }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
