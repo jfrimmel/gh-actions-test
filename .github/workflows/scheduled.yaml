@@ -11,8 +11,14 @@ jobs:
     permissions:
       issues: write
     steps:
+      - run: |
+          echo 'some script, that runs for some time'
+          sleep 30
+          echo 'now the script fails'
+          false
       # https://docs.github.com/en/actions/use-cases-and-examples/project-management/scheduling-issue-creation
       - run: gh issue create --title "Test Issue created by periodic Workflow" --body "This was created on $(date)"
+        if: ${{ failure() }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
